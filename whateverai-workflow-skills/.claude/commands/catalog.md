@@ -52,14 +52,19 @@ Run this command after installing or removing plugins to keep the skills catalog
 5. **Handle duplicate command names** (e.g., `/test` from user commands AND gstack):
    List both entries in the reference with source clearly labeled. Note the collision with "(also: [source])" in the description.
 
-6. **Diff against existing catalog:**
+6. **Load usage data:** Read `~/.claude/skill-usage.jsonl` (if it exists). For each skill, compute:
+   - **Total invocations in last 30 days** (count of matching entries with timestamp within 30 days of now)
+   - **Last used date** (most recent timestamp for that skill)
+   - If the file is missing or empty, all skills get 0 uses and "never" for last used
+
+7. **Diff against existing catalog:**
    - If `~/.claude/skills-reference.md` already exists, read it and compare:
      - New skills (discovered but not in existing file) → flag in summary
      - Removed skills (in existing file but not discovered) → flag in summary
      - Changed descriptions → silently update
    - On first run (no existing file), skip the diff and mark all skills as new
 
-7. **Write `~/.claude/skills-reference.md`** with this format:
+8. **Write `~/.claude/skills-reference.md`** with this format:
 
    ```
    # Skills Reference
@@ -68,12 +73,22 @@ Run this command after installing or removing plugins to keep the skills catalog
    > Last updated: [today's date]
    > Total: [count] skills across 6 categories
 
+   ## Most Used (30 days)
+   > Your top 10 most-invoked skills. Empty on first run.
+
+   | # | Skill | Command | Uses | Last Used |
+   |---|-------|---------|------|-----------|
+   | 1 | [name] | `[/command]` | [N] | [relative date] |
+   ...
+
+   (If no usage data exists, print: "No usage data yet. Skills will appear here as you use /do to invoke them.")
+
    ## Dev Workflow
    > Use these when building, debugging, or shipping code.
 
-   | Skill | Command | Description | Source |
-   |-------|---------|-------------|--------|
-   | [name] | `[/command]` | [description] | [source] |
+   | Skill | Command | Description | Source | Last Used | Uses (30d) |
+   |-------|---------|-------------|--------|-----------|------------|
+   | [name] | `[/command]` | [description] | [source] | [relative] | [N] |
    ...
 
    ## Project Management
@@ -97,9 +112,12 @@ Run this command after installing or removing plugins to keep the skills catalog
    ...
    ```
 
-   Sort skills alphabetically within each category.
+   **Relative date format:** "today", "1d ago", "3d ago", "1w ago", "2w ago", "never"
+   **Uses column:** integer count; show "—" for 0
 
-8. **Print summary:**
+   Sort skills alphabetically within each category (usage-based sorting is only in the Most Used section).
+
+9. **Print summary:**
    ```
    Skills catalog updated: [count] skills across 6 categories
    - Dev Workflow: [n]
@@ -109,6 +127,7 @@ Run this command after installing or removing plugins to keep the skills catalog
    - Marketing & Growth: [n]
    - Infrastructure & Config: [n]
 
+   Most used (30d): [top 3 skill names with counts, or "no usage data yet"]
    New since last run: [list or "none"]
    Removed since last run: [list or "none"]
    ```
