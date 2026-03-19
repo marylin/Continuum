@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-/plugin add github:whateverai-dev/claude-skills/whateverai-dev-skills
+/plugin add github:marylin/whateverai-commands/whateverai-dev-skills
 ```
 
 ## Commands

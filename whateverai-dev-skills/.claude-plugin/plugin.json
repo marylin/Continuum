@@ -6,8 +6,8 @@
     "name": "Marylin Alarcon",
     "email": "hello@whateverai.dev"
   },
-  "homepage": "https://github.com/whateverai-dev/claude-skills",
-  "repository": "https://github.com/whateverai-dev/claude-skills",
+  "homepage": "https://github.com/marylin/whateverai-commands",
+  "repository": "https://github.com/marylin/whateverai-commands",
   "license": "MIT",
   "keywords": ["dev", "build", "test", "debug", "refactor", "review", "deploy", "security"]
 }

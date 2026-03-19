@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-/plugin add github:whateverai-dev/claude-skills/whateverai-workflow-skills
+/plugin add github:marylin/whateverai-commands/whateverai-workflow-skills
 ```
 
 ## Prerequisites

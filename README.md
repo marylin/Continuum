@@ -16,7 +16,7 @@ I had 80+ Claude Code skills installed across 10 plugins and couldn't find any o
 Works in any project with zero setup. Essential development commands.
 
 ```
-/plugin add github:whateverai-dev/claude-skills/whateverai-dev-skills
+/plugin add github:marylin/whateverai-commands/whateverai-dev-skills
 ```
 
 | Command | Description |
@@ -35,7 +35,7 @@ Works in any project with zero setup. Essential development commands.
 Structured workflow with planning, progress tracking, session recovery, and skill routing. Requires adopting the `docs/` folder convention (created by `/init`).
 
 ```
-/plugin add github:whateverai-dev/claude-skills/whateverai-workflow-skills
+/plugin add github:marylin/whateverai-commands/whateverai-workflow-skills
 ```
 
 | Command | Description | Requires |
