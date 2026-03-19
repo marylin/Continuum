@@ -1,0 +1,41 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "whateverai-claude-skills",
+  "id": "whateverai-claude-skills",
+  "metadata": {
+    "description": "18 Claude Code commands for development and workflow management. Two installable plugin packs by WhateverAI.",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "Marylin Alarcon",
+    "url": "https://github.com/whateverai-dev"
+  },
+  "plugins": [
+    {
+      "name": "whateverai-dev-skills",
+      "source": "./whateverai-dev-skills",
+      "description": "8 essential development commands that work in any project: build, test, debug, refactor, review, document, deploy-check, security-scan. Zero setup required. Multi-ecosystem support (Node.js, Python, Go, Rust). Use when you need reliable development workflow commands that auto-detect your project's stack.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Marylin Alarcon",
+        "url": "https://github.com/whateverai-dev"
+      },
+      "category": "development",
+      "homepage": "https://github.com/whateverai-dev/claude-skills",
+      "tags": ["dev", "build", "test", "debug", "refactor", "review", "deploy", "security", "workflow", "productivity"]
+    },
+    {
+      "name": "whateverai-workflow-skills",
+      "source": "./whateverai-workflow-skills",
+      "description": "10 opinionated workflow commands for structured project management: plan, resume, recover, sync, status, init, align, catalog, do, plan-linear. Includes smart skill routing (/do), session crash recovery (/recover), skills catalog (/catalog), and optional Linear integration. Use when you want a structured planning and progress tracking system for Claude Code projects.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Marylin Alarcon",
+        "url": "https://github.com/whateverai-dev"
+      },
+      "category": "workflow",
+      "homepage": "https://github.com/whateverai-dev/claude-skills",
+      "tags": ["workflow", "planning", "project-management", "linear", "session-recovery", "skill-routing", "progress-tracking", "productivity"]
+    }
+  ]
+}
