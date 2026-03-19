@@ -2,6 +2,13 @@
 
 Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 18 commands across two plugin packs.
 
+## Why
+
+I had 80+ Claude Code skills installed across 10 plugins and couldn't find any of them. The `/skills` dialog is a flat alphabetical list with no categories, no descriptions, and no way to search by intent. So I built a system to organize, route, and manage them, then packaged my most-used development and workflow commands into two shareable plugin packs.
+
+<!-- TODO: Add a demo GIF showing /do or /catalog in action -->
+<!-- Record with: asciinema, vhs (charmbracelet), or a simple screen recording -->
+
 ## Packs
 
 ### [whateverai-dev-skills](./whateverai-dev-skills/) — Universal (8 commands)
