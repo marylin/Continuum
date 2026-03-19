@@ -1,3 +1,5 @@
+# Create Plan
+
 Analyze this request. Create `docs/05-Plans/[descriptive-name]-plan.md` using this exact format:
 
 # [Feature Name] Plan
@@ -23,7 +25,7 @@ Rules:
 - Write detailed specs upfront to reduce ambiguity during execution.
 - Show me the summary and questions. Do NOT code until I approve.
 - If something goes sideways mid-execution, STOP and re-plan — don't keep going with a broken approach.
-- Check docs/06-Development/lessons.md before starting for relevant lessons from past work.
+- Check docs/06-Development/lessons.md before starting for relevant lessons from past work. If the file doesn't exist, skip — it's optional.
 
 Then execute ALL tasks to completion without asking me anything between tasks.
 

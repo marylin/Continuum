@@ -1,3 +1,5 @@
+# Recover Session
+
 Recover work from a Claude CLI session that ended unexpectedly.
 
 **NOTE:** This command is for crashed/interrupted sessions. For resuming planned features (with progress files in docs/05-Plans/), use `/resume` instead.
@@ -31,4 +33,4 @@ Edge cases:
 - Session older than 7 days → flag as "old — likely irrelevant" but still allow reading
 - If no session state found, suggest: "No session state found. Did you mean /resume for planned features?"
 
-Feature: $ARGUMENTS
+$ARGUMENTS

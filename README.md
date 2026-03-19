@@ -1,6 +1,6 @@
 # WhateverAI Claude Skills
 
-Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 17 source commands packaged as 18 installable skills.
+Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 18 commands across two plugin packs.
 
 ## Packs
 

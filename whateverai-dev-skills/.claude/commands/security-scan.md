@@ -3,12 +3,18 @@
 Perform a security review of the current project.
 
 ## Instructions
+
+Detect the project's ecosystem from config files (package.json → npm, pyproject.toml → pip/poetry, Cargo.toml → cargo, go.mod → go, Makefile → make). Adapt commands accordingly.
+
 1. **Secrets**: Search for hardcoded API keys, passwords, tokens in source files
    - Check `.env` files are in `.gitignore`
    - Search for patterns like `api_key`, `secret`, `password`, `token` in source code
 2. **Dependencies**: Check for known vulnerabilities
-   - Run `npm audit` if Node.js project
-   - Review `package.json` for outdated packages with known CVEs
+   - Node.js: `npm audit`
+   - Python: `pip audit` or `safety check`
+   - Rust: `cargo audit`
+   - Go: `govulncheck ./...`
+   - Review dependency manifests for outdated packages with known CVEs
 3. **Code patterns**: Look for common vulnerabilities
    - SQL injection (raw queries without parameterization)
    - XSS (unescaped user input in HTML/JSX)

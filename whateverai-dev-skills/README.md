@@ -36,6 +36,10 @@ Commands that accept arguments pass them via `$ARGUMENTS`. For example:
 - `/test auth` — runs only auth-related tests
 - `/debug login fails after token refresh` — focuses debugging on that issue
 
+## Behavior Notes
+
+- **`/test` auto-fixes failures:** By default, `/test` will automatically attempt to fix failing tests. If you only want test results without auto-fixing, use `/test` and tell Claude to report only.
+
 ## Requirements
 
 - Claude Code CLI

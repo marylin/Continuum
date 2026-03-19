@@ -1,9 +1,11 @@
+# Resume Feature
+
 Resume work on an in-progress feature. If $ARGUMENTS given, match that feature. Otherwise find the most recent active progress file in `docs/05-Plans/` (ignore `docs/09-Archive/`).
 
 If no progress files found in docs/05-Plans/, suggest: "No plan progress found. Did you mean /recover for crashed sessions?"
 
 Steps:
-1. Check docs/06-Development/lessons.md for relevant lessons before resuming
+1. Check docs/06-Development/lessons.md for relevant lessons before resuming (skip if the file doesn't exist — it's optional)
 2. Find the progress file locally in `docs/05-Plans/`
 3. If the progress file is MISSING (deleted, lost on branch switch, CLI crash):
    - Check the plan file for the feature — it cannot be reconstructed automatically without Linear
@@ -18,4 +20,4 @@ Steps:
 11. Do NOT stop between tasks to ask for permission or confirmation
 12. If something goes sideways, STOP and re-plan rather than pushing through a broken approach
 
-Feature: $ARGUMENTS
+$ARGUMENTS

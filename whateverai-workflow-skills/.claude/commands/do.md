@@ -1,3 +1,5 @@
+# Smart Skill Router
+
 Smart skill router. Describe what you want to do and I'll find the right skill.
 
 If no arguments provided, ask: "What would you like to do? Describe your task and I'll find the right skill."
@@ -45,4 +47,4 @@ Say "No matching skill found. Proceeding with your request." and handle the task
 - Deprecated skills are never proposed (they are filtered out by /catalog)
 - If the catalog is more than 14 days old, warn but still proceed with matching
 
-Feature: $ARGUMENTS
+$ARGUMENTS

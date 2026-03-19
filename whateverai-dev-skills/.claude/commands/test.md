@@ -1,3 +1,5 @@
+# Run Tests
+
 Run tests. If $ARGUMENTS given, run only matching tests. Otherwise full suite.
 
 - Use project's existing framework. Install Playwright if needed (no asking).

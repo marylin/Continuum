@@ -1,3 +1,7 @@
+# Create Plan (Linear)
+
+Create an implementation plan with Linear issue sync. Analyzes the request, creates a plan in docs/05-Plans/, and syncs to Linear.
+
 <!-- NOTE: Requires Linear MCP connection. Configure your team key in your project's CLAUDE.md. -->
 
 Analyze this request. Create `docs/05-Plans/[descriptive-name]-plan.md` using this exact format:
@@ -26,7 +30,7 @@ Rules:
 - Write detailed specs upfront to reduce ambiguity during execution.
 - Show me the summary and questions. Do NOT code until I approve.
 - If something goes sideways mid-execution, STOP and re-plan — don't keep going with a broken approach.
-- Check docs/06-Development/lessons.md before starting for relevant lessons from past work.
+- Check docs/06-Development/lessons.md before starting for relevant lessons from past work. If the file doesn't exist, skip — it's optional.
 
 ## Linear Sync (on approval)
 

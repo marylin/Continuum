@@ -25,6 +25,25 @@ docs/
   09-Archive/
 ```
 
+### Session State Persistence (required for /recover)
+
+**Without this directive, `/recover` will not work.** Add the following to your global `~/.claude/CLAUDE.md`:
+
+```
+## Session State Persistence
+Maintain session state files to survive unexpected CLI closures.
+- On entering any multi-step task (3+ steps) → create initial state
+- After each meaningful milestone → update state
+- On completion → delete session files
+- BEFORE /compact → update state (mandatory)
+```
+
+Session state files are written by Claude at checkpoints during multi-step work:
+- Per-project: `docs/05-Plans/.session-<id>.md` (add `docs/05-Plans/.session-*.md` to .gitignore)
+- Global index: `~/.claude/sessions/session-<id>.json`
+
+The `~/.claude/sessions/` directory is created automatically when session state is first written.
+
 ## Commands
 
 | Command | Description | Requires |
@@ -71,27 +90,19 @@ Plans live in `docs/05-Plans/[name]-plan.md`. Progress is tracked in `docs/05-Pl
 3. [L] Large task — criteria
 ```
 
-### Session State Persistence (for /recover)
-
-The `/recover` command works with a session state system. To enable it, add this to your global `~/.claude/CLAUDE.md`:
-
-**Session state files** are written by Claude at checkpoints during multi-step work:
-- Per-project: `docs/05-Plans/.session-<id>.md` (add `docs/05-Plans/.session-*.md` to .gitignore)
-- Global index: `~/.claude/sessions/session-<id>.json`
-
-Add a directive to your CLAUDE.md telling Claude to write session state:
-```
-## Session State Persistence
-Maintain session state files to survive unexpected CLI closures.
-- On entering any multi-step task (3+ steps) → create initial state
-- After each meaningful milestone → update state
-- On completion → delete session files
-- BEFORE /compact → update state (mandatory)
-```
-
 ### Skills Reference (for /catalog and /do)
 
 `/catalog` scans all installed skills and writes `~/.claude/skills-reference.md`. `/do` reads this file to route by intent. Run `/catalog` after installing or removing plugins.
+
+## Troubleshooting
+
+**`/recover` finds no sessions:** Make sure you've added the Session State Persistence directive to your `~/.claude/CLAUDE.md`. Without it, Claude won't write session state files.
+
+**`/do` says "Skills catalog not found":** Run `/catalog` first to generate the reference file.
+
+**`/plan-linear` or `/sync` fails:** Ensure the Linear MCP server is connected. Check with `/mcp` in Claude Code.
+
+**`/resume` can't find progress:** Make sure your progress files are in `docs/05-Plans/` and not archived in `docs/09-Archive/`.
 
 ## License
 

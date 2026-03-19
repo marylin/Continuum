@@ -1,3 +1,5 @@
+# Show Status
+
 Find the active progress file in `docs/05-Plans/` (ignore `docs/09-Archive/`). If $ARGUMENTS given, match that feature name.
 
 Reply with ONLY this format, nothing else:
@@ -11,4 +13,4 @@ Done: [count] | In Progress: [count] | Remaining: [count] | Blocked: [count]
 
 Do not list completed tasks unless I ask. Do not read archived plans.
 
-Feature: $ARGUMENTS
+$ARGUMENTS

@@ -1,3 +1,5 @@
+# Scan Skills Catalog
+
 Scan all installed Claude Code skills and generate a categorized reference file.
 
 Run this command after installing or removing plugins to keep the skills catalog up to date.
@@ -14,16 +16,17 @@ Run this command after installing or removing plugins to keep the skills catalog
       - `~/.claude/plugins/cache/*/*/*/skills/*/` — official plugins
       - `~/.claude/plugins/cache/*/*/*/.claude/skills/*/` — third-party plugins
       - `~/.claude/plugins/cache/*/*/*/commands/` and `~/.claude/plugins/cache/*/*/*/.claude/commands/` — plugin commands
+      - These paths follow Claude Code's current plugin cache layout and may change in future CLI versions.
       - When multiple versions exist for a plugin, use the most recently modified directory only.
-      - Skip empty plugins (playwright, supabase — these are MCP tools, not skills).
+      - Skip plugins that contribute only MCP tools, not skills or commands (they'll have no skills/ or commands/ directories).
       - Skip `temp_git_*` directories in the plugin cache (temporary git clones, not real plugins).
-      - For plugins with sub-skills (e.g., ui-ux-pro-max has banner-design, brand, design, etc.), list only the top-level umbrella skill unless the sub-skills have meaningfully different purposes.
+      - For plugins with sub-skills, list only the top-level umbrella skill unless the sub-skills have meaningfully different purposes.
 
    d. **Deduplicate:** Merge session list + filesystem results. Session list is authoritative for what's invocable. Filesystem adds source plugin attribution.
 
 2. **Filter out:**
-   - Deprecated skills: `superpowers:brainstorm`, `superpowers:write-plan`, `superpowers:execute-plan`
-   - Meta skills: `superpowers:using-superpowers`
+   - Deprecated skills: any skill whose description says "Deprecated - use X instead" or similar
+   - Meta/bootstrap skills that are not directly user-invocable (e.g., internal setup or bootstrapping commands)
    - The `/catalog` and `/do` commands themselves
 
 3. **Categorize each skill** using keyword matching:
@@ -110,4 +113,4 @@ Run this command after installing or removing plugins to keep the skills catalog
    Removed since last run: [list or "none"]
    ```
 
-Feature: $ARGUMENTS
+$ARGUMENTS

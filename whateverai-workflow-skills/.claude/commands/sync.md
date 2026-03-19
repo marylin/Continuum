@@ -1,3 +1,7 @@
+# Sync to Linear
+
+Sync local work with Linear. Three modes: history (full scan), recent (last 48h), status (show current).
+
 <!-- NOTE: Requires Linear MCP connection. -->
 
 Sync local work with Linear. Three modes based on $ARGUMENTS:

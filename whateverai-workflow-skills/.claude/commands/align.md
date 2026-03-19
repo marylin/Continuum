@@ -1,3 +1,5 @@
+# Align Project
+
 Audit this project and align it with WhateverAI workflow standards.
 
 ## Step 1: Scan & Report (do NOT change anything yet)

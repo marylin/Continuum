@@ -1,3 +1,5 @@
+# Initialize Project
+
 Initialize this project to work with the WhateverAI workflow conventions. Scan everything first, then set it all up.
 
 ## Step 1: Project Analysis (do NOT create anything yet)
