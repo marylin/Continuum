@@ -2,45 +2,36 @@
 
 Audit this project and align it with WhateverAI workflow standards.
 
-## Step 1: Scan & Report (do NOT change anything yet)
+## Step 1: Scan (no changes yet)
 
-Check and report as a compact table:
+Report as a compact table:
 
 | Issue | File/Folder | Proposed Action |
 |-------|-------------|-----------------|
-| Root .md | ./notes.md | → docs/01-Discovery/ |
-| Missing folder | docs/05-Plans/ | CREATE |
-| Missing file | docs/06-Development/lessons.md | CREATE (empty with header) |
-| Duplicate | ./documentation/ + ./docs/ | MERGE → docs/ |
-| Old CLAUDE.md | ./CLAUDE.md has workflow rules | REPLACE with minimal template |
-| Stray tests | ./test-login.js | → tests/unit/auth/ |
 
-Also flag:
-- Co-located test files (ask me: keep co-location or move?)
-- Ambiguous docs (ask me: which folder?)
+Check for: stray root .md files, missing docs/ folders, missing lessons.md, duplicate folders, CLAUDE.md with embedded workflow rules, stray test files.
 
-## Step 2: Wait for Approval
+Flag ambiguities: co-located tests (keep or move?), docs that could go in multiple folders.
 
-Show the table. Ask about ambiguous cases. Do NOT execute until I approve.
+## Step 2: Approve
+
+Show the table. Wait for approval before executing.
 
 ## Step 3: Execute
 
-1. Create only needed folders from: docs/{01-Discovery,02-Requirements,03-Architecture,04-Design,05-Plans,06-Development,07-Testing,08-Feedback,09-Archive} and tests/{unit,integration,e2e,fixtures}
-2. Create docs/06-Development/lessons.md if missing (header: `# Lessons Learned`)
-3. Use `git mv` for all moves (preserve history)
-4. Update import paths and markdown links for moved files
-5. If CLAUDE.md has workflow rules, replace with minimal template — preserve project-specific info
-6. Do NOT rewrite existing plan/progress file contents — just move them
-7. Commit: `refactor(structure): align project with standard conventions`
+1. Create needed folders: `docs/{01-Discovery,...,09-Archive}` and `tests/{unit,integration,e2e,fixtures}`
+2. Create `docs/06-Development/lessons.md` if missing
+3. `git mv` for all moves (preserve history)
+4. Update import paths and markdown links
+5. Replace CLAUDE.md workflow rules with minimal template (preserve project-specific info)
+6. Commit: `refactor(structure): align project with standard conventions`
 
 ## Step 4: Verify
 
 - No root .md except README.md + CLAUDE.md
-- No duplicate folders
-- lessons.md exists in docs/06-Development/
-- Run test suite — report results in compact format
+- lessons.md exists, no duplicate folders
 - Show final tree (2 levels deep)
 
-Rules: Never delete — archive to docs/09-Archive/. If existing structure is close, ask before forcing template.
+Rules: Never delete -- archive to docs/09-Archive/. Ask before forcing template on close-enough structure.
 
 Project: $ARGUMENTS

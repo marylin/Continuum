@@ -1,18 +1,11 @@
 # Debug Issue
 
-Investigate and diagnose a bug or unexpected behavior.
+Investigate and fix a bug or unexpected behavior.
 
-## Instructions
-1. Understand the reported issue from the user's description
-2. Search the codebase for relevant files:
-   - Trace the code path from entry point to the problem area
-   - Check recent git changes that might have introduced the issue: `git log --oneline -20`
-3. Identify the root cause:
-   - Look for logic errors, race conditions, type mismatches
-   - Check environment variables and configuration
-   - Review error messages and stack traces if provided
-4. Propose a fix with explanation
-5. If the fix is clear and safe, implement it
-6. If multiple possible causes exist, list them ranked by likelihood
+1. Trace the code path from entry point to problem area
+2. Check `git log --oneline -20` for recent changes that may have introduced the issue
+3. Identify root cause -- check logic, types, config, race conditions, environment
+4. If the fix is clear: implement it and verify
+5. If multiple causes are possible: rank by likelihood, fix the most probable first
 
 $ARGUMENTS

@@ -1,6 +1,6 @@
 # WhateverAI Claude Skills
 
-Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 18 commands across two plugin packs.
+Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 17 commands across two plugin packs.
 
 ## Why
 
@@ -30,7 +30,7 @@ Works in any project with zero setup. Essential development commands.
 | `/security-scan` | Security vulnerability scan |
 | `/test` | Run test suite (full or filtered) |
 
-### [whateverai-workflow-skills](./whateverai-workflow-skills/) — Opinionated (10 commands)
+### [whateverai-workflow-skills](./whateverai-workflow-skills/) — Opinionated (9 commands)
 
 Structured workflow with planning, progress tracking, session recovery, and skill routing. Requires adopting the `docs/` folder convention (created by `/init`).
 
@@ -44,8 +44,7 @@ Structured workflow with planning, progress tracking, session recovery, and skil
 | `/catalog` | Scan and categorize all installed skills | — |
 | `/do` | Smart skill router — describe what you need | `/catalog` run first |
 | `/init` | Initialize project with workflow structure | — |
-| `/plan` | Create plans with local progress tracking | docs/05-Plans/ |
-| `/plan-linear` | Create plans with Linear issue sync | Linear MCP |
+| `/plan` | Create plans with progress tracking + optional Linear sync | docs/05-Plans/ |
 | `/recover` | Recover crashed/interrupted sessions | Session state convention |
 | `/resume` | Resume in-progress features | docs/05-Plans/ |
 | `/status` | Show active progress state | docs/05-Plans/ |

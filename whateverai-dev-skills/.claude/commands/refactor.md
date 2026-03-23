@@ -1,21 +1,11 @@
 # Refactor Code
 
-Refactor the specified code or file while preserving behavior.
+Refactor the specified code while preserving behavior.
 
-## Instructions
-1. Read the target file(s) completely before making changes
-2. Identify refactoring opportunities:
-   - Extract repeated logic into reusable functions
-   - Simplify complex conditionals
-   - Improve naming for clarity
-   - Remove dead code
-   - Split large functions/components into smaller ones
+1. Read target file(s) completely before changing anything
+2. Make changes incrementally -- one logical refactor at a time
 3. Follow the project's existing conventions
-4. Make changes incrementally — one logical refactor at a time
-5. After refactoring, verify:
-   - No behavior changes (run tests if available)
-   - No new lint errors
-   - Imports are correctly updated
-6. Summarize what was changed and why
+4. After each change: run tests (if available), check for lint errors, verify imports
+5. Summarize what changed and why
 
 $ARGUMENTS

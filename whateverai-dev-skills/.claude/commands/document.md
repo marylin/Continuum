@@ -2,15 +2,9 @@
 
 Document the specified code, API, or component.
 
-## Instructions
-1. Read the target code thoroughly
-2. Generate documentation appropriate to the type:
-   - **Component**: Props interface, usage examples, key behaviors
-   - **API endpoint**: Method, path, request/response schemas, auth requirements
-   - **Function/Module**: Parameters, return type, side effects, usage example
-   - **Project**: Architecture overview, setup instructions, key decisions
-3. Match the documentation style already used in the project
-4. Keep it concise — document the "why" and non-obvious behavior, not every line
-5. Place documentation inline (JSDoc/docstrings) unless the user requests a separate file
+1. Read the target code, then generate docs matching the project's existing style
+2. Document the "why" and non-obvious behavior -- skip what's self-evident from the code
+3. Place inline (JSDoc/docstrings) unless a separate file is requested
+4. Include: type signatures, usage examples, side effects, gotchas
 
 $ARGUMENTS
