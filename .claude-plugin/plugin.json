@@ -1,7 +1,7 @@
 {
   "name": "whateverai-claude-skills",
-  "description": "18 Claude Code commands for development and workflow management. Two plugin packs: dev-skills (universal) and workflow-skills (opinionated project management).",
-  "version": "1.0.0",
+  "description": "17 Claude Code commands for development and workflow management. Two plugin packs: dev-skills (8 universal) and workflow-skills (9 opinionated project management).",
+  "version": "1.1.0",
   "author": {
     "name": "Marylin Alarcon",
     "url": "https://github.com/marylin"
