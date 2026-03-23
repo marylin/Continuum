@@ -16,20 +16,17 @@ Run `/init` in your project to create the expected folder structure:
 docs/{01-Discovery,02-Requirements,03-Architecture,04-Design,05-Plans,06-Development,07-Testing,08-Feedback,09-Archive}/
 ```
 
-### Session State Persistence (required for /recover)
+### Session Recovery (/recover)
 
-Add to your `~/.claude/CLAUDE.md`:
+`/recover` uses a two-phase approach:
 
+1. **Primary (log-based):** Reads `~/.claude/sessions/active-changes.log` — written automatically by hooks. No manual setup needed if you have the hooks configured.
+2. **Fallback (legacy):** Reads `~/.claude/sessions/session-*.json` from the older v1 session state format.
+
+To annotate the current task in the log (optional but recommended for multi-step work):
 ```
-## Session State Persistence
-Maintain session state files to survive unexpected CLI closures.
-- On entering any multi-step task (3+ steps) → create initial state
-- After each meaningful milestone → update state
-- On completion → delete session files
-- BEFORE /compact → update state (mandatory)
+echo "STATE: <one sentence describing current task>" >> ~/.claude/sessions/active-changes.log
 ```
-
-Session state files: per-project `docs/05-Plans/.session-<id>.md` (gitignore these) and global `~/.claude/sessions/session-<id>.json`.
 
 ## Commands
 
@@ -40,7 +37,7 @@ Session state files: per-project `docs/05-Plans/.session-<id>.md` (gitignore the
 | `/do` | Smart skill router — describe what you need | `/catalog` run first |
 | `/init` | Initialize project with workflow structure | — |
 | `/plan` | Create plans with progress tracking + optional Linear sync | docs/05-Plans/ |
-| `/recover` | Recover crashed/interrupted sessions | Session state convention |
+| `/recover` | Recover crashed/interrupted sessions | Hooks (auto) or legacy session files |
 | `/resume` | Resume in-progress features | docs/05-Plans/ |
 | `/status` | Show active progress state | docs/05-Plans/ |
 | `/sync` | Sync work to Linear (history, recent, status modes) | Linear MCP |
@@ -64,6 +61,8 @@ Complexity: `[S]` <30min, `[M]` 1-3hrs, `[L]` 3hrs+
 ### Skills Reference
 
 `/catalog` writes `~/.claude/skills-reference.md`. `/do` reads it for intent routing. Run `/catalog` after plugin changes.
+
+Both `/catalog` and `/do` track usage via `~/.claude/skill-usage.jsonl` (appended on each invocation). The catalog uses this to show a **Most Used (30d)** section and per-skill `Last Used` / `Uses (30d)` columns. `/do` boosts frequently-used skills in its scoring.
 
 ## License
 

@@ -6,9 +6,6 @@ Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 17 command
 
 I had 80+ Claude Code skills installed across 10 plugins and couldn't find any of them. The `/skills` dialog is a flat alphabetical list with no categories, no descriptions, and no way to search by intent. So I built a system to organize, route, and manage them, then packaged my most-used development and workflow commands into two shareable plugin packs.
 
-<!-- TODO: Add a demo GIF showing /do or /catalog in action -->
-<!-- Record with: asciinema, vhs (charmbracelet), or a simple screen recording -->
-
 ## Packs
 
 ### [whateverai-dev-skills](./whateverai-dev-skills/) — Universal (8 commands)
@@ -45,7 +42,7 @@ Structured workflow with planning, progress tracking, session recovery, and skil
 | `/do` | Smart skill router — describe what you need | `/catalog` run first |
 | `/init` | Initialize project with workflow structure | — |
 | `/plan` | Create plans with progress tracking + optional Linear sync | docs/05-Plans/ |
-| `/recover` | Recover crashed/interrupted sessions | Session state convention |
+| `/recover` | Recover crashed/interrupted sessions | Hooks (auto) or legacy session files |
 | `/resume` | Resume in-progress features | docs/05-Plans/ |
 | `/status` | Show active progress state | docs/05-Plans/ |
 | `/sync` | Sync work to Linear | Linear MCP |
