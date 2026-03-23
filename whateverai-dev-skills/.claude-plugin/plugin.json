@@ -1,7 +1,7 @@
 {
   "name": "whateverai-dev-skills",
   "description": "8 essential development commands: build, test, debug, refactor, review, document, deploy-check, security-scan",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "Marylin Alarcon",
     "email": "hello@whateverai.dev"

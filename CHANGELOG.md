@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 (2026-03-23)
+
+### Both packs
+- Added `skills/*/SKILL.md` layout — preferred format for Claude skills marketplace
+- Each command now has a dedicated `SKILL.md` with frontmatter (name, description, argument-hint)
+- Legacy `.claude/commands/` files retained for backward compatibility
+- Total: 17 skills across 2 packs (unchanged)
+
 ## 1.1.0 (2026-03-23)
 
 ### whateverai-dev-skills
