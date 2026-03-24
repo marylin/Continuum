@@ -5,3 +5,27 @@ node_modules/
 *.mp4
 *.mov
 *.avi
+
+# === Paperclip / Claude / Agent artifacts ===
+.claude/
+.agents/
+.gstack/
+.interface-design/
+.playwright-mcp/
+.planning/
+
+# === Test evidence & screenshots ===
+test-results/
+playwright-report/
+coverage/
+.nyc_output/
+test-screenshots/
+e2e-results/
+*.test-screenshot.*
+
+# === OS / IDE ===
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
