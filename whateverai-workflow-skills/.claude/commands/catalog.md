@@ -2,134 +2,59 @@
 
 Scan all installed Claude Code skills and generate a categorized reference file.
 
-Run this command after installing or removing plugins to keep the skills catalog up to date.
+Run after installing or removing plugins to keep the catalog current.
 
 ## Steps
 
 1. **Gather skills from all sources:**
+   a. **Session skill list (PRIMARY):** Extract skill name, invoke command, and description from the current session's available skills (system-reminder).
+   b. **User commands:** Scan `~/.claude/commands/*.md`. Filename = command name, first line = description.
+   c. **Plugin enrichment:** Check `~/.claude/plugins/cache/*/*/*/skills/*/` and `~/.claude/plugins/cache/*/*/*/.claude/commands/` for source attribution. Use most recent version only. Skip `temp_git_*` dirs.
+   d. **Deduplicate:** Session list is authoritative. Filesystem adds source plugin names.
 
-   a. **Session skill list (PRIMARY):** Read the current session's available skills (visible in system-reminder). This is the authoritative source — it lists every skill Claude can actually invoke, with descriptions. Extract: skill name, invoke command, one-line description.
+2. **Filter out:** deprecated skills, meta/bootstrap skills, and `/catalog` + `/do` themselves.
 
-   b. **User commands:** Scan `~/.claude/commands/` for all `.md` files. Each file is a command. Extract the filename (without .md) as the command name. Read the first line of each file for the description.
-
-   c. **Plugin enrichment (SECONDARY):** For additional metadata (source plugin name), check:
-      - `~/.claude/plugins/cache/*/*/*/skills/*/` — official plugins
-      - `~/.claude/plugins/cache/*/*/*/.claude/skills/*/` — third-party plugins
-      - `~/.claude/plugins/cache/*/*/*/commands/` and `~/.claude/plugins/cache/*/*/*/.claude/commands/` — plugin commands
-      - These paths follow Claude Code's current plugin cache layout and may change in future CLI versions.
-      - When multiple versions exist for a plugin, use the most recently modified directory only.
-      - Skip plugins that contribute only MCP tools, not skills or commands (they'll have no skills/ or commands/ directories).
-      - Skip `temp_git_*` directories in the plugin cache (temporary git clones, not real plugins).
-      - For plugins with sub-skills, list only the top-level umbrella skill unless the sub-skills have meaningfully different purposes.
-
-   d. **Deduplicate:** Merge session list + filesystem results. Session list is authoritative for what's invocable. Filesystem adds source plugin attribution.
-
-2. **Filter out:**
-   - Deprecated skills: any skill whose description says "Deprecated - use X instead" or similar
-   - Meta/bootstrap skills that are not directly user-invocable (e.g., internal setup or bootstrapping commands)
-   - The `/catalog` and `/do` commands themselves
-
-3. **Categorize each skill** using keyword matching:
+3. **Categorize** by keyword matching:
 
    | Category | Keywords |
    |----------|----------|
    | Dev Workflow | implement, plan, debug, test-driven, commit, branch, brainstorm, feature, code review, worktree, skill, parallel, api |
    | Project Management | resume, recover, status, sync, retro, progress, linear, init, align, office |
-   | Quality & Testing | QA, security, deploy-check, browse, test suite, review PR, cookie, investigate, codex, careful |
-   | UI/Design | design, UI, UX, interface, frontend, component, layout, style, redesign, simplify |
-   | Marketing & Growth | SEO, CRO, ads, email, copy, pricing, launch, conversion, signup, referral, churn, sales, marketing, content strategy, social, lead, competitor, popup, paywall, onboarding, analytics, A/B |
-   | Infrastructure & Config | config, setup, strapi, supabase, vercel, hook, CLAUDE.md, build, ship, document, typescript, remotion, keybinding, refactor, expo, native, mobile |
+   | Quality & Testing | QA, security, deploy-check, browse, test suite, review PR, cookie, investigate |
+   | UI/Design | design, UI, UX, interface, frontend, component, layout, style, redesign |
+   | Marketing & Growth | SEO, CRO, ads, email, copy, pricing, launch, conversion, signup, referral, churn, sales, marketing, content, social, lead |
+   | Infrastructure & Config | config, setup, strapi, supabase, vercel, hook, CLAUDE.md, build, ship, document, typescript |
 
-   Match skill name + description against category keywords. Assign to the category with the most keyword hits.
+   If ambiguous, ask the user to pick a category.
 
-4. **Handle ambiguous skills** that don't clearly match any category — ask the user:
-   ```
-   Can't auto-categorize:
-   1. [skill-name] — "[description]"
-      → (1) Dev Workflow (2) Project Mgmt (3) Quality (4) UI/Design (5) Marketing (6) Infrastructure
-   ```
+4. **Load usage data** from `~/.claude/skill-usage.jsonl` (if exists). Compute invocations in last 30 days and last-used date per skill. Missing file = all zeros.
 
-5. **Handle duplicate command names** (e.g., `/test` from user commands AND gstack):
-   List both entries in the reference with source clearly labeled. Note the collision with "(also: [source])" in the description.
+5. **Diff against existing catalog** (`~/.claude/skills-reference.md`): flag new/removed skills. First run = skip diff.
 
-6. **Load usage data:** Read `~/.claude/skill-usage.jsonl` (if it exists). For each skill, compute:
-   - **Total invocations in last 30 days** (count of matching entries with timestamp within 30 days of now)
-   - **Last used date** (most recent timestamp for that skill)
-   - If the file is missing or empty, all skills get 0 uses and "never" for last used
-
-7. **Diff against existing catalog:**
-   - If `~/.claude/skills-reference.md` already exists, read it and compare:
-     - New skills (discovered but not in existing file) → flag in summary
-     - Removed skills (in existing file but not discovered) → flag in summary
-     - Changed descriptions → silently update
-   - On first run (no existing file), skip the diff and mark all skills as new
-
-8. **Write `~/.claude/skills-reference.md`** with this format:
+6. **Write `~/.claude/skills-reference.md`:**
 
    ```
    # Skills Reference
-
-   > Auto-generated by /catalog. Do not edit manually — changes will be overwritten.
-   > Last updated: [today's date]
-   > Total: [count] skills across 6 categories
+   > Auto-generated by /catalog. Last updated: [date]. Total: [N] skills.
 
    ## Most Used (30 days)
-   > Your top 10 most-invoked skills. Empty on first run.
-
    | # | Skill | Command | Uses | Last Used |
-   |---|-------|---------|------|-----------|
-   | 1 | [name] | `[/command]` | [N] | [relative date] |
-   ...
+   (top 10, or "No usage data yet.")
 
-   (If no usage data exists, print: "No usage data yet. Skills will appear here as you use /do to invoke them.")
-
-   ## Dev Workflow
-   > Use these when building, debugging, or shipping code.
-
+   ## [Category Name]
+   > [One-line description]
    | Skill | Command | Description | Source | Last Used | Uses (30d) |
-   |-------|---------|-------------|--------|-----------|------------|
-   | [name] | `[/command]` | [description] | [source] | [relative] | [N] |
-   ...
-
-   ## Project Management
-   > Use these for tracking work, syncing with Linear, and resuming sessions.
-   ...
-
-   ## Quality & Testing
-   > Use these for QA, security, deployment readiness, and browser testing.
-   ...
-
-   ## UI/Design
-   > Use these for building interfaces, design systems, and visual QA.
-   ...
-
-   ## Marketing & Growth
-   > Use these for SEO, ads, copy, email, CRO, pricing, and go-to-market.
-   ...
-
-   ## Infrastructure & Config
-   > Use these for project setup, CI/CD, framework-specific help, and Claude Code config.
-   ...
+   (alphabetical within category)
    ```
 
-   **Relative date format:** "today", "1d ago", "3d ago", "1w ago", "2w ago", "never"
-   **Uses column:** integer count; show "—" for 0
+   Relative dates: "today", "1d ago", "3d ago", "1w ago", "2w ago", "never". Uses: integer or "—" for 0.
 
-   Sort skills alphabetically within each category (usage-based sorting is only in the Most Used section).
-
-9. **Print summary:**
+7. **Print summary:**
    ```
-   Skills catalog updated: [count] skills across 6 categories
-   - Dev Workflow: [n]
-   - Project Management: [n]
-   - Quality & Testing: [n]
-   - UI/Design: [n]
-   - Marketing & Growth: [n]
-   - Infrastructure & Config: [n]
-
-   Most used (30d): [top 3 skill names with counts, or "no usage data yet"]
-   New since last run: [list or "none"]
-   Removed since last run: [list or "none"]
+   Skills catalog updated: [N] skills across 6 categories
+   [category]: [n] per line
+   Most used (30d): [top 3 or "no usage data yet"]
+   New/Removed since last run: [list or "none"]
    ```
 
 $ARGUMENTS
