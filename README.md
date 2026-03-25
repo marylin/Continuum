@@ -1,65 +1,92 @@
-# WhateverAI Claude Skills
+# Continuum
 
-Two Claude Code plugin packs by [WhateverAI](https://whateverai.dev). 17 commands across two plugin packs.
+Your Claude Code sessions remember, recover, and learn.
 
-## Why
+---
 
-I had 80+ Claude Code skills installed across 10 plugins and couldn't find any of them. The `/skills` dialog is a flat alphabetical list with no categories, no descriptions, and no way to search by intent. So I built a system to organize, route, and manage them, then packaged my most-used development and workflow commands into two shareable plugin packs.
-
-## Packs
-
-### [whateverai-dev-skills](./whateverai-dev-skills/) — Universal (8 commands)
-
-Works in any project with zero setup. Essential development commands.
+Claude Code sessions are stateless. When you crash, switch tasks, or come back tomorrow, all context is gone. Continuum is 7 skills that give your sessions memory.
 
 ```
-/plugin add github:marylin/whateverai-commands/whateverai-dev-skills
+init → align → plan → resume ⇄ checkpoint
+                 ↑        ↓         ↓
+              reflect   recover (crash)
+                 ↑         ↓
+                 └─────────┘
 ```
 
-| Command | Description |
-|---------|-------------|
-| `/build` | Build project and resolve errors |
-| `/debug` | Investigate and diagnose bugs |
-| `/deploy-check` | Pre-deployment checklist |
-| `/document` | Generate documentation |
-| `/refactor` | Refactor with behavior preservation |
-| `/review` | Code review against base branch |
-| `/security-scan` | Security vulnerability scan |
-| `/test` | Run test suite (full or filtered) |
-
-### [whateverai-workflow-skills](./whateverai-workflow-skills/) — Opinionated (9 commands)
-
-Structured workflow with planning, progress tracking, session recovery, and skill routing. Requires adopting the `docs/` folder convention (created by `/init`).
+## Install
 
 ```
-/plugin add github:marylin/whateverai-commands/whateverai-workflow-skills
+/install github:marylin/continuum
 ```
 
-| Command | Description | Requires |
-|---------|-------------|----------|
-| `/align` | Audit project against workflow standards | docs/ structure |
-| `/catalog` | Scan and categorize all installed skills | — |
-| `/do` | Smart skill router — describe what you need | `/catalog` run first |
-| `/init` | Initialize project with workflow structure | — |
-| `/plan` | Create plans with progress tracking + optional Linear sync | docs/05-Plans/ |
-| `/recover` | Recover crashed/interrupted sessions | Hooks (auto) or legacy session files |
-| `/resume` | Resume in-progress features | docs/05-Plans/ |
-| `/status` | Show active progress state | docs/05-Plans/ |
-| `/sync` | Sync work to Linear | Linear MCP |
+## Skills
+
+| Skill | What it does |
+|-------|-------------|
+| `/init` | Bootstrap a project with CLAUDE.md and `.lifecycle/` directory |
+| `/align` | Audit project structure and lifecycle compliance (0-10 health score) |
+| `/plan` | Create a structured plan with sized tasks and acceptance criteria |
+| `/resume` | Pick up where you left off — shows progress and cognitive state |
+| `/checkpoint` | Save a cognitive snapshot of what you're doing and why |
+| `/recover` | Recover work from a crashed or interrupted session |
+| `/reflect` | Extract lessons from completed work, then archive the plan |
 
 ## Quick Start
 
-1. Install the pack(s) you want
-2. For dev-skills: just use the commands — they work immediately
-3. For workflow-skills: run `/init` in your project first, then use `/plan` to start planning
+1. `/init` your project — sets up CLAUDE.md and `.lifecycle/`
+2. `/plan` a feature — creates sized tasks with acceptance criteria
+3. Work through tasks — continuum tracks progress
+4. `/checkpoint` before breaks — saves your reasoning and decisions
+5. `/resume` next session — picks up exactly where you left off
+6. `/reflect` when done — extracts lessons for future work
 
-## Author
+## Session Hooks (optional)
 
-**Marylin Alarcon** — Tech Lead, AI builder, solo founder. Building from Medellin for the world.
+For crash recovery (`/recover`), install session tracking hooks that log file changes and commits. Add to your Claude Code `settings.json`:
 
-- [WhateverAI](https://whateverai.dev)
-- [LinkedIn](https://linkedin.com/in/marylinalarcon)
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "bash /path/to/continuum/scripts/track-file-change.sh \"$TOOL_INPUT\""
+      },
+      {
+        "matcher": "Bash",
+        "command": "bash /path/to/continuum/scripts/track-commit.sh \"$TOOL_INPUT\""
+      }
+    ],
+    "Stop": [
+      {
+        "command": "bash /path/to/continuum/scripts/assemble-session-state.sh"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": "bash /path/to/continuum/scripts/check-stale-sessions"
+      }
+    ]
+  }
+}
+```
+
+Without hooks, `/recover` still works with checkpoint files and legacy session data.
+
+## What continuum creates in your projects
+
+```
+project/
+├── CLAUDE.md                     ← <200 lines, always loaded
+├── .claude/rules/                ← path-scoped, on demand (medium/large projects)
+└── .lifecycle/                   ← tracked or gitignored (you choose)
+    ├── plans/                    ← active plans + progress files
+    ├── checkpoints/              ← cognitive snapshots
+    ├── lessons/                  ← topic-based learned patterns
+    └── archive/                  ← completed plans + checkpoints
+```
 
 ## License
 
-MIT
+MIT — Marylin Alarcon
