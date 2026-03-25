@@ -7,6 +7,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Check 1: SKILL.md frontmatter
 echo "=== Check 1: SKILL.md frontmatter ==="
+VALIDATED=0
 for skill_dir in "$ROOT_DIR"/skills/*/; do
   [ -d "$skill_dir" ] || continue
   skill_name="$(basename "$skill_dir")"
@@ -34,7 +35,12 @@ for skill_dir in "$ROOT_DIR"/skills/*/; do
     echo "FAIL: $skill_name/SKILL.md missing 'description' in frontmatter"
     ERRORS=$((ERRORS + 1))
   fi
+
+  VALIDATED=$((VALIDATED + 1))
 done
+if [[ "$VALIDATED" -gt 0 ]] && [[ "$ERRORS" -eq 0 ]]; then
+  echo "OK: $VALIDATED skills validated"
+fi
 echo ""
 
 # Check 2: Skill count matches plugin.json
@@ -86,12 +92,11 @@ for term in "${STALE_TERMS[@]}"; do
   matches=$(echo "$matches" | xargs)
   if [[ -n "$matches" ]]; then
     echo "FAIL: Found '$term' in: $matches"
+    ERRORS=$((ERRORS + 1))
     FOUND_STALE=1
   fi
 done
-if [[ "$FOUND_STALE" -eq 1 ]]; then
-  ERRORS=$((ERRORS + 1))
-else
+if [[ "$FOUND_STALE" -eq 0 ]]; then
   echo "OK: No stale references"
 fi
 echo ""
