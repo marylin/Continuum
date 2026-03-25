@@ -112,7 +112,7 @@ paths:
    - `.lifecycle/` exists and has expected subdirectories
    - CLAUDE.md exists and is under 200 lines
    - CLAUDE.md doesn't contain things Claude can infer from code
-   - `.claude/rules/` files have `paths:` frontmatter (not loading every session)
+   - `.claude/rules/` files have `paths:` frontmatter (not loading every session). Flag `path:` (singular) as common misconfiguration.
    - Stale rules referencing paths that don't exist
    - Plans in `.lifecycle/plans/` that should be archived (all tasks done)
    - Lessons freshness (any `.lifecycle/lessons/` files updated in last 30 days?)
@@ -161,8 +161,9 @@ paths:
    [ ] Task 2
    [ ] Task 3
    ```
-6. Execute all tasks to completion without asking between tasks
+6. Begin executing the first task immediately (same session). Continue without asking between tasks.
 7. Update progress as tasks complete
+8. If session ends before all tasks are done, the user runs `/resume` in the next session to continue
 
 **Reads:** `.lifecycle/lessons/[relevant].md`
 **Writes:** `.lifecycle/plans/[name]-plan.md`, `.lifecycle/plans/[name]-progress.md`
@@ -180,8 +181,9 @@ paths:
 **Description:** `"Resume in-progress work from where you left off. Use when returning to a feature after a break, starting a new session on ongoing work, or after /compact. Shows progress and picks up the next task."`
 
 **What it does:**
-1. Find the active progress file in `.lifecycle/plans/` (most recent, or match `$ARGUMENTS`)
-2. If no progress files: suggest `/recover` for crashed sessions or `/plan` for new work
+1. Find active progress files in `.lifecycle/plans/` (also check `docs/05-Plans/` as v1.x fallback)
+2. If multiple progress files found: list them with last-modified timestamps and ask user to select
+3. If no progress files: suggest `/recover` for crashed sessions or `/plan` for new work
 3. Show compact status:
    ```
    Feature: auth-system | Progress: 4/8 tasks
@@ -212,7 +214,7 @@ paths:
 **Description:** `"Save a cognitive snapshot — what you're doing, why, decisions made, and what's next. Use before ending a session, before /compact, when context is getting long, or anytime you want to preserve reasoning for a future session."`
 
 **What it does:**
-1. Identify current feature from active progress file
+1. Identify current feature from active progress file. If no active progress file, ask: "No active plan found. What are you working on?" and use the answer as the feature name
 2. Write `.lifecycle/checkpoints/[feature]-checkpoint.md`:
    ```markdown
    # Checkpoint: [feature]
@@ -258,7 +260,7 @@ paths:
 
 **Phase 1: Check crash logs (active-changes.log)**
 3. Check `~/.claude/sessions/active-changes.log` and rotated logs
-4. If no logs, skip to Phase 2
+4. If no logs found, note: "No session hooks detected. Crash log recovery requires hooks that write to ~/.claude/sessions/active-changes.log. See continuum README for setup." Then skip to Phase 2.
 5. Parse SESSION headers for cwd, sid, started
 6. Extract file paths (EDIT/WRITE) and COMMIT history
 7. Extract last STATE line
@@ -303,12 +305,12 @@ paths:
 **Description:** `"Extract lessons from completed work and archive the plan. Use after finishing a feature, when all tasks are done, or when you want to capture what you learned before moving on."`
 
 **What it does:**
-1. Find the completed plan (all tasks `[x]` in progress file, or match `$ARGUMENTS`)
+1. Find the completed plan (all tasks `[x]` in progress file, or match `$ARGUMENTS`). Also check `docs/05-Plans/` as v1.x fallback.
 2. If no completed plans: "No completed plans found. Finish your tasks first."
 3. Read the plan and progress files
 4. Analyze git history for the feature's commits
 5. Identify patterns:
-   - **Corrections** — tasks re-planned or re-done (evidence: multiple attempts in git, [!] blocked states)
+   - **Corrections** — tasks re-planned or re-done (evidence: [!] blocked states in progress, re-planning commits, or tasks marked done then reopened)
    - **Surprises** — S tasks that took M/L effort, or vice versa
    - **Discoveries** — new tools, patterns, or gotchas encountered
    - **What worked** — approaches worth repeating
@@ -407,7 +409,7 @@ project/
 1. **SKILL.md frontmatter** — every `skills/*/SKILL.md` has valid `name`, `description`; name matches directory name
 2. **Skill count** — number of `skills/*/SKILL.md` files matches count in `plugin.json` description
 3. **Version format** — `plugin.json` version is valid semver
-4. **No stale references** — greps non-archived markdown for: "whateverai", "dev-skills", "workflow-skills", "plan-linear", "linear", "18 commands", "17 commands", "/status", "/sync", "/do", "/catalog", "/build", "/test", "/debug", "/refactor", "/review", "/document", "/deploy-check", "/security-scan"
+4. **No stale references** — greps non-archived markdown for: "whateverai", "dev-skills", "workflow-skills", "plan-linear", "18 commands", "17 commands". Excludes CHANGELOG.md and migration docs from the check (they legitimately reference removed features)
 
 **CI:** `.github/workflows/validate.yml`
 - Push to `master`, PRs targeting `master`
