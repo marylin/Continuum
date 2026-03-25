@@ -29,3 +29,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# === Working docs (local only) ===
+docs/
