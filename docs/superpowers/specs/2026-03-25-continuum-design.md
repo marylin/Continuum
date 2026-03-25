@@ -184,25 +184,25 @@ paths:
 1. Find active progress files in `.lifecycle/plans/` (also check `docs/05-Plans/` as v1.x fallback)
 2. If multiple progress files found: list them with last-modified timestamps and ask user to select
 3. If no progress files: suggest `/recover` for crashed sessions or `/plan` for new work
-3. Show compact status:
+4. Show compact status:
    ```
    Feature: auth-system | Progress: 4/8 tasks
    Done: Task 1, Task 2, Task 3, Task 4
    Next: Task 5 — add session middleware
    ```
-4. Check for checkpoint files in `.lifecycle/checkpoints/` — if found, show cognitive state:
+5. Check for checkpoint files in `.lifecycle/checkpoints/` — if found, show cognitive state:
    ```
    Last checkpoint (2h ago):
    Context: Implementing JWT validation, chose RS256 over HS256 for key rotation
    Next steps: Wire up middleware, then integration tests
    Gotcha: Token refresh endpoint needs rate limiting
    ```
-5. Read `.lifecycle/lessons/[relevant topics].md` for applicable lessons
-6. Read plan file ONLY for the next incomplete task's details
-7. Continue from next `[ ]` or `[~]` task
-8. Update progress as tasks complete — one line per task, no prose
-9. If context limit approaching: run `/checkpoint`, commit, `/compact`, resume
-10. If something goes sideways: STOP and re-plan
+6. Read `.lifecycle/lessons/[relevant topics].md` for applicable lessons
+7. Read plan file ONLY for the next incomplete task's details
+8. Continue from next `[ ]` or `[~]` task
+9. Update progress as tasks complete — one line per task, no prose
+10. If context limit approaching: run `/checkpoint`, commit, `/compact`, resume
+11. If something goes sideways: STOP and re-plan
 
 **Reads:** `.lifecycle/plans/`, `.lifecycle/checkpoints/`, `.lifecycle/lessons/`
 **Writes:** progress file updates
@@ -244,6 +244,7 @@ paths:
 **Design notes:**
 - Lightweight — should take <5 seconds and <200 tokens to invoke
 - No git commit on checkpoint (it's a working state, not a milestone)
+- Slugify the feature name (lowercase, spaces to hyphens) when constructing the filename
 - Other skills suggest checkpointing: `resume` suggests it when context is long, `plan` suggests it between large tasks
 
 ---
@@ -305,6 +306,7 @@ paths:
 **Description:** `"Extract lessons from completed work and archive the plan. Use after finishing a feature, when all tasks are done, or when you want to capture what you learned before moving on."`
 
 **What it does:**
+0. If `.lifecycle/lessons/` is empty and `docs/06-Development/lessons.md` exists, offer to migrate existing lessons into topic files before proceeding.
 1. Find the completed plan (all tasks `[x]` in progress file, or match `$ARGUMENTS`). Also check `docs/05-Plans/` as v1.x fallback.
 2. If no completed plans: "No completed plans found. Finish your tasks first."
 3. Read the plan and progress files
@@ -329,7 +331,7 @@ paths:
     Archived: plan + progress + checkpoint
     ```
 
-**Reads:** `.lifecycle/plans/`, `.lifecycle/checkpoints/`, git log, `.lifecycle/lessons/`
+**Reads:** `.lifecycle/plans/`, `docs/05-Plans/` (v1.x fallback), `.lifecycle/checkpoints/`, `docs/06-Development/lessons.md` (v1.x migration), git log, `.lifecycle/lessons/`
 **Writes:** `.lifecycle/lessons/[topic].md`, moves files to `.lifecycle/archive/`
 
 **Topic detection:**
