@@ -1,13 +1,13 @@
 {
-  "name": "whateverai-claude-skills",
-  "description": "17 Claude Code commands for development and workflow management. Two plugin packs: dev-skills (8 universal) and workflow-skills (9 opinionated project management).",
-  "version": "1.1.0",
+  "name": "continuum",
+  "description": "7 Claude Code skills for project lifecycle — init, align, plan, resume, checkpoint, recover, reflect.",
+  "version": "2.0.0",
   "author": {
     "name": "Marylin Alarcon",
     "url": "https://github.com/marylin"
   },
-  "homepage": "https://github.com/marylin/whateverai-commands",
-  "repository": "https://github.com/marylin/whateverai-commands",
+  "homepage": "https://github.com/marylin/continuum",
+  "repository": "https://github.com/marylin/continuum",
   "license": "MIT",
-  "keywords": ["claude-code", "skills", "dev-tools", "workflow", "productivity", "planning", "linear"]
+  "keywords": ["claude-code", "skills", "lifecycle", "planning", "recovery", "lessons"]
 }

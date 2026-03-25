@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.0.0] — 2026-03-25
+
+### Breaking Changes
+- Renamed from `whateverai-commands` to `continuum`
+- Consolidated 2 plugin packs (17 skills) into 1 pack (7 skills)
+- Plans moved from `docs/05-Plans/` to `.lifecycle/plans/` (v1.x paths still checked as fallback)
+- Lessons moved from `docs/06-Development/lessons.md` to `.lifecycle/lessons/[topic].md`
+- Removed Linear sync integration
+- Removed all 8 dev skills (/build, /test, /debug, /deploy-check, /document, /refactor, /review, /security-scan)
+- Removed /status, /sync, /do, /catalog skills
+
+### Added
+- `/checkpoint` — cognitive snapshots that persist reasoning across sessions
+- `/reflect` — extract lessons from completed work and archive plans
+- `.lifecycle/` directory system with plans, checkpoints, lessons, and archive
+- CLAUDE.md template following Anthropic best practices (<200 lines)
+- `.claude/rules/` scaffolding for medium/large projects (path-scoped)
+- `scripts/validate.sh` — 4-check validation (frontmatter, count, version, stale refs)
+- CI workflow: `validate.yml` replaces `paperclip-ci-notify.yml`
+
+### Changed
+- `/init` — creates `.lifecycle/` and modern CLAUDE.md; supports project size tiers
+- `/align` — health score (0-10) system; checks `.lifecycle/` compliance and rules hygiene
+- `/plan` — writes to `.lifecycle/plans/`; no Linear sync; creates progress file on approval
+- `/resume` — reads checkpoints for cognitive state; v1.x fallback for plan locations
+- `/recover` — Phase 0 checks checkpoints first; presents cognitive state alongside file recovery
+
+### Migration
+- Plans in `docs/05-Plans/` continue to work as fallback
+- Lessons in `docs/06-Development/lessons.md` migrated by `/reflect` on first run
+- Session hooks are backward compatible
+
 ## 1.2.0 (2026-03-23)
 
 ### Both packs
