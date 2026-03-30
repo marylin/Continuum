@@ -32,3 +32,4 @@ Thumbs.db
 
 # === Working docs (local only) ===
 docs/
+.env*
