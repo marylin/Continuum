@@ -107,4 +107,18 @@ $ACTIVITY_LINE
 TEMPLATE
 fi
 
+# --- Sync project files → vault (project is source of truth during a session) ---
+
+# Sync docs/ → vault
+if [[ -d "$CWD/docs" ]]; then
+  mkdir -p "$VAULT_DIR/docs"
+  cp -ru "$CWD/docs/." "$VAULT_DIR/docs/" 2>/dev/null || true
+fi
+
+# Sync .env* files → vault
+for envfile in "$CWD"/.env*; do
+  [[ -f "$envfile" ]] || continue
+  cp -u "$envfile" "$VAULT_DIR/$(basename "$envfile")" 2>/dev/null || true
+done
+
 exit 0
