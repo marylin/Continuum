@@ -16,6 +16,21 @@ PROJECT_NAME="$(basename "$CWD")"
 VAULT_DIR="$HOME/.claude/vaults/$PROJECT_NAME"
 CONTEXT_FILE="$VAULT_DIR/CONTEXT.md"
 
+# --- Sync vault → project (vault/Obsidian is source of truth) ---
+if [[ -d "$VAULT_DIR" ]]; then
+  # Sync docs/ from vault → project (cp -u: only if vault file is newer or missing in project)
+  if [[ -d "$VAULT_DIR/docs" ]]; then
+    mkdir -p "$CWD/docs"
+    cp -ru "$VAULT_DIR/docs/." "$CWD/docs/" 2>/dev/null || true
+  fi
+
+  # Sync .env* from vault → project
+  for envfile in "$VAULT_DIR"/.env*; do
+    [[ -f "$envfile" ]] || continue
+    cp -u "$envfile" "$CWD/$(basename "$envfile")" 2>/dev/null || true
+  done
+fi
+
 [[ -f "$CONTEXT_FILE" ]] || exit 0
 
 # Extract most recent activity timestamp (first line after ## Recent Activity that starts with "- [")
