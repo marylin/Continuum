@@ -8,6 +8,11 @@
             "type": "command",
             "command": "bash \"$CLAUDE_PLUGIN_ROOT/scripts/track-file-change.sh\"",
             "timeout": 2000
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PLUGIN_ROOT/scripts/wip-auto-save.sh\"",
+            "timeout": 3000
           }
         ]
       },
@@ -17,16 +22,6 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PLUGIN_ROOT/scripts/track-commit.sh\"",
-            "timeout": 3000
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PLUGIN_ROOT/scripts/wip-auto-save.sh\"",
             "timeout": 3000
           }
         ]

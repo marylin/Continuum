@@ -109,10 +109,7 @@ if [[ ! -f "$ACTIVITY_FILE" ]]; then
   echo "" >> "$ACTIVITY_FILE"
 fi
 
-# Append new entry after the header (line 2)
-sed -i "2a\\$ACTIVITY_LINE" "$ACTIVITY_FILE"
-
-# Trim to 20 entries (keep header + blank line + 20 entries)
-head -n 22 "$ACTIVITY_FILE" > "$ACTIVITY_FILE.tmp" && mv "$ACTIVITY_FILE.tmp" "$ACTIVITY_FILE"
+# Insert new entry after header, trim to 20 entries
+{ head -2 "$ACTIVITY_FILE"; echo "$ACTIVITY_LINE"; tail -n +3 "$ACTIVITY_FILE" | head -19; } > "$ACTIVITY_FILE.tmp" && mv "$ACTIVITY_FILE.tmp" "$ACTIVITY_FILE"
 
 exit 0
