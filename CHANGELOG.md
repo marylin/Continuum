@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0] — 2026-03-31
+
+### Added
+- `scripts/auto-checkpoint.sh` — Stop hook that saves basic checkpoint to `.lifecycle/checkpoints/` on session exit
+- `scripts/detect-active-work.sh` — SessionStart hook that detects active plans and prompts `/resume`
+- `.claude-plugin/hooks/hooks.json` — automatic hook registration on plugin install
+
+### Fixed
+- Removed hardcoded Windows jq path from `track-file-change.sh` and `track-commit.sh` — now portable across platforms
+- README hook documentation now matches actual shipped scripts
+
+### Removed
+- Personal vault scripts that don't belong in OSS repo: `read-context.sh`, `update-context.sh`, `wip-auto-save.sh`, `vault-init.sh`, `vault-init-all.sh`, `worktree-init.sh`, `gitignore-audit.sh`
+
 ## [2.0.0] — 2026-03-25
 
 ### Breaking Changes
