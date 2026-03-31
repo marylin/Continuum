@@ -37,8 +37,8 @@ if git -C "$CWD" rev-parse --git-dir &>/dev/null; then
   [[ -n "$BRANCH" ]] || BRANCH="detached"
 fi
 
-# Extract last STATE line or last COMMIT message for task description
-TASK="(no task recorded)"
+# Extract task description: STATE line > last commit > branch name > fallback
+TASK=""
 STATE_LINE="$(grep '^STATE:' "$LOG_FILE" | tail -1 || true)"
 if [[ -n "$STATE_LINE" ]]; then
   TASK="${STATE_LINE#STATE: }"
@@ -46,8 +46,12 @@ else
   COMMIT_LINE="$(grep ' COMMIT ' "$LOG_FILE" | tail -1 || true)"
   if [[ -n "$COMMIT_LINE" ]]; then
     TASK="$(echo "$COMMIT_LINE" | sed 's/.*COMMIT [a-f0-9]* //')"
+  elif [[ "$BRANCH" != "unknown" && "$BRANCH" != "detached" && "$BRANCH" != "main" && "$BRANCH" != "master" && "$BRANCH" != "develop" ]]; then
+    # Use branch name as task description (strip prefixes like feat/, fix/, etc.)
+    TASK="$(echo "$BRANCH" | sed 's|^[a-z]*/||; s|-| |g; s|_| |g')"
   fi
 fi
+[[ -n "$TASK" ]] || TASK="session on $BRANCH"
 
 # Count file changes and commits
 # grep -c outputs "0" AND returns exit 1 on zero matches — capture separately
@@ -64,12 +68,30 @@ if [[ -f "$CONTEXT_FILE" ]]; then
   sed -i "s|^- Working on:.*$|- Working on: $TASK|" "$CONTEXT_FILE"
   sed -i "s|^- Branch:.*$|- Branch: $BRANCH|" "$CONTEXT_FILE"
 
-  # Append new activity entry after ## Recent Activity header.
-  # sed 'a' on Git Bash can be unreliable, so use awk for the insert.
-  awk -v line="$ACTIVITY_LINE" '
-    /^## Recent Activity$/ { print; print line; next }
-    { print }
-  ' "$CONTEXT_FILE" > "$CONTEXT_FILE.tmp" && mv "$CONTEXT_FILE.tmp" "$CONTEXT_FILE"
+  # Dedup: skip adding a new activity line if the last entry has the same task
+  # and is less than 30 minutes old
+  LAST_ENTRY="$(grep '^\- \[' "$CONTEXT_FILE" | head -1 || true)"
+  SKIP_ACTIVITY=false
+  if [[ -n "$LAST_ENTRY" ]]; then
+    LAST_TS="$(echo "$LAST_ENTRY" | sed 's/^- \[\([^ ]*\).*/\1/')"
+    LAST_TASK="$(echo "$LAST_ENTRY" | sed 's/^- \[[^]]*\] //' | sed 's/ ([0-9]*.*//')"
+    LAST_EPOCH="$(date -u -d "$LAST_TS" +%s 2>/dev/null || echo 0)"
+    NOW_EPOCH="$(date -u +%s)"
+    AGE=$(( NOW_EPOCH - LAST_EPOCH ))
+    if [[ "$LAST_TASK" == "$TASK" && "$AGE" -lt 1800 ]]; then
+      # Same task within 30 min — update the existing line's file count instead
+      sed -i "0,/^\- \[/{s|^\- \[.*|$ACTIVITY_LINE|}" "$CONTEXT_FILE"
+      SKIP_ACTIVITY=true
+    fi
+  fi
+
+  # Only add new entry if not deduplicated
+  if [[ "$SKIP_ACTIVITY" == false ]]; then
+    awk -v line="$ACTIVITY_LINE" '
+      /^## Recent Activity$/ { print; print line; next }
+      { print }
+    ' "$CONTEXT_FILE" > "$CONTEXT_FILE.tmp" && mv "$CONTEXT_FILE.tmp" "$CONTEXT_FILE"
+  fi
 
   # Trim Recent Activity to last 20 entries (most recent at top).
   # Keeps the ## header, up to 20 activity lines, then everything after
