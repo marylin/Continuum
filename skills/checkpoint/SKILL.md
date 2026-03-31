@@ -1,6 +1,7 @@
 ---
 name: checkpoint
 description: Save a cognitive snapshot — what you're doing, why, decisions made, and what's next. Use before ending a session, before /compact, when context is getting long, or anytime you want to preserve reasoning for a future session.
+argument-hint: [feature name]
 ---
 
 # Checkpoint

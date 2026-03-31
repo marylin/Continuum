@@ -1,6 +1,7 @@
 ---
 name: recover
 description: Recover work from a crashed or interrupted session. Use when Claude crashed mid-task, after an unexpected exit, when you see 'stale sessions detected', or when you lost context and need to figure out what was happening.
+argument-hint: [feature name]
 ---
 
 # Recover Session
