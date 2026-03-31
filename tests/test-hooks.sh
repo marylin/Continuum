@@ -19,7 +19,10 @@ fail() { FAIL=$((FAIL + 1)); echo "  ${RED}FAIL${RESET}: $1"; }
 setup_project() {
   TMPDIR=$(mktemp -d)
   mkdir -p "$TMPDIR/.lifecycle/plans" "$TMPDIR/.lifecycle/checkpoints"
-  cd "$TMPDIR" && git init --quiet && git commit --allow-empty -m "init" --quiet
+  cd "$TMPDIR" && git init --quiet
+  git -C "$TMPDIR" config user.email "test@test.com"
+  git -C "$TMPDIR" config user.name "Test"
+  git -C "$TMPDIR" commit --allow-empty -m "init" --quiet
   echo "$TMPDIR"
 }
 
