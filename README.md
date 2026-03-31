@@ -41,9 +41,34 @@ init → align → plan → resume ⇄ checkpoint
 5. `/resume` next session — picks up exactly where you left off
 6. `/reflect` when done — extracts lessons for future work
 
-## Session Hooks (optional)
+## How it works
 
-For crash recovery (`/recover`), install session tracking hooks that log file changes and commits. Add to your Claude Code `settings.json`:
+**Tier 1 — Skills only (no setup):**
+
+The core loop works entirely through `.lifecycle/` files:
+
+```
+/plan → work → /checkpoint → /resume → /reflect
+```
+
+`/resume` reads your progress files and checkpoints. `/checkpoint` saves your reasoning. No hooks needed.
+
+**Tier 2 — With session hooks (automatic on install):**
+
+Continuum registers hooks that enhance the experience:
+
+| Hook | What it does |
+|------|-------------|
+| **SessionStart** | Detects active plans, prompts you to `/resume` |
+| **Stop** | Auto-saves basic checkpoint (branch, progress, recent files) |
+| **PostToolUse** | Tracks file changes and commits for crash recovery (`/recover`) |
+
+Session tracking hooks require [jq](https://jqlang.github.io/jq/). If jq is not installed, tracking hooks exit silently — everything else still works.
+
+<details>
+<summary>Manual hook setup (if not using plugin install)</summary>
+
+Add to your Claude Code `settings.json`:
 
 ```json
 {
@@ -51,28 +76,32 @@ For crash recovery (`/recover`), install session tracking hooks that log file ch
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
-        "command": "bash /path/to/continuum/scripts/track-file-change.sh \"$TOOL_INPUT\""
+        "hooks": [{ "type": "command", "command": "bash /path/to/continuum/scripts/track-file-change.sh", "timeout": 2000 }]
       },
       {
-        "matcher": "Bash",
-        "command": "bash /path/to/continuum/scripts/track-commit.sh \"$TOOL_INPUT\""
-      }
-    ],
-    "Stop": [
-      {
-        "command": "bash /path/to/continuum/scripts/assemble-session-state.sh"
+        "matcher": "Bash(git commit*)",
+        "hooks": [{ "type": "command", "command": "bash /path/to/continuum/scripts/track-commit.sh", "timeout": 3000 }]
       }
     ],
     "SessionStart": [
       {
-        "command": "bash /path/to/continuum/scripts/check-stale-sessions"
+        "matcher": "startup",
+        "hooks": [{ "type": "command", "command": "bash /path/to/continuum/scripts/detect-active-work.sh", "timeout": 3000 }]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [{ "type": "command", "command": "bash /path/to/continuum/scripts/auto-checkpoint.sh", "timeout": 5000 }]
       }
     ]
   }
 }
 ```
 
-Without hooks, `/recover` still works with checkpoint files and legacy session data.
+</details>
+
+Without hooks, `/recover` still works with checkpoint files.
 
 ## What continuum creates in your projects
 
