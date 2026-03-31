@@ -33,3 +33,12 @@ Thumbs.db
 # === Working docs (local only) ===
 docs/
 .env*
+
+# === Personal scripts (not part of Continuum OSS) ===
+scripts/read-context.sh
+scripts/update-context.sh
+scripts/wip-auto-save.sh
+scripts/vault-init.sh
+scripts/vault-init-all.sh
+scripts/worktree-init.sh
+scripts/gitignore-audit.sh
