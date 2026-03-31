@@ -1,7 +1,7 @@
 {
   "name": "continuum",
-  "description": "7 Claude Code skills for project lifecycle — init, align, plan, resume, checkpoint, recover, reflect.",
-  "version": "2.0.0",
+  "description": "7 Claude Code skills + 5 session hooks for project lifecycle — plan, resume, checkpoint, recover, reflect, with auto-save and crash recovery.",
+  "version": "2.1.0",
   "author": {
     "name": "Marylin Alarcon",
     "url": "https://github.com/marylin"

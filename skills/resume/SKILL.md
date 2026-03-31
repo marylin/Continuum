@@ -34,11 +34,24 @@ Next steps: [planned next actions]
 Gotcha: [warnings for this session]
 ```
 
-## Step 4: Check lessons
+## Step 4: Check activity log
+
+Read `.lifecycle/activity.md` if it exists. Show the last 3 sessions:
+
+```
+Recent sessions:
+  [2026-03-31T14:30:00Z] auth-system — 4/8 tasks, branch: feat/auth, files: 12
+  [2026-03-30T10:15:00Z] auth-system — 2/8 tasks, branch: feat/auth, files: 8
+  [2026-03-29T16:00:00Z] auth-system — 0/8 tasks, branch: feat/auth, files: 3
+```
+
+Skip if file doesn't exist or has no entries.
+
+## Step 5: Check lessons
 
 Read `.lifecycle/lessons/[relevant topics].md` for applicable lessons. Also check `docs/06-Development/lessons.md` as v1.x fallback. Skip if neither exists.
 
-## Step 5: Continue
+## Step 6: Continue
 
 1. Read plan file ONLY for the next incomplete task's details
 2. Continue from next `[ ]` or `[~]` task

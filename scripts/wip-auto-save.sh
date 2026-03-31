@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# wip-auto-save.sh — PostToolUse hook: auto-save uncommitted work every 10 edits.
+# PostToolUse hook: auto-save uncommitted work every 10 edits.
+# Creates wip/ branches as safety net against crashes and data loss.
+# Token cost: 0 (command hook, no LLM)
 set -euo pipefail
 
 INPUT="$(cat)"
@@ -10,13 +12,15 @@ if [[ -z "$CWD" ]]; then
   exit 0
 fi
 
-PROJECT_NAME="$(basename "$CWD")"
-VAULT_DIR="$HOME/.claude/vaults/$PROJECT_NAME"
+LIFECYCLE_DIR="$CWD/.lifecycle"
 
-[[ -d "$VAULT_DIR" ]] || exit 0
+# Only run if this project uses .lifecycle/
+[[ -d "$LIFECYCLE_DIR" ]] || exit 0
+
+# Must be a git repo
 git -C "$CWD" rev-parse --git-dir &>/dev/null || exit 0
 
-COUNTER_FILE="$VAULT_DIR/.wip-counter"
+COUNTER_FILE="$LIFECYCLE_DIR/.wip-counter"
 
 COUNT=0
 if [[ -f "$COUNTER_FILE" ]]; then
@@ -25,6 +29,7 @@ fi
 COUNT=$(( COUNT + 1 ))
 echo "$COUNT" > "$COUNTER_FILE"
 
+# Only trigger every 10 edits
 if (( COUNT % 10 != 0 )); then
   exit 0
 fi
@@ -36,16 +41,18 @@ if [[ -z "$DIRTY" ]]; then
   exit 0
 fi
 
-# Check if current branch has a commit within last 5 minutes
+# Skip if committed recently (within 5 minutes)
 LAST_COMMIT_AGE="$(git log -1 --format=%cr 2>/dev/null || echo "unknown")"
 if echo "$LAST_COMMIT_AGE" | grep -qE '^[0-4] minutes? ago$'; then
   exit 0
 fi
 
 TIMESTAMP="$(date +%Y%m%d-%H%M)"
+PROJECT_NAME="$(basename "$CWD")"
 WIP_BRANCH="wip/${PROJECT_NAME}-${TIMESTAMP}"
 ORIGINAL_BRANCH="$(git branch --show-current 2>/dev/null || echo "HEAD")"
 
+# Stash dirty work, create wip branch from it, restore working state
 git stash push -m "wip-auto-save $TIMESTAMP" --quiet 2>/dev/null || exit 0
 git stash branch "$WIP_BRANCH" &>/dev/null || {
   git stash pop --quiet 2>/dev/null
