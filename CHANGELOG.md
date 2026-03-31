@@ -5,14 +5,18 @@
 ### Added
 - `scripts/auto-checkpoint.sh` — Stop hook that saves basic checkpoint to `.lifecycle/checkpoints/` on session exit
 - `scripts/detect-active-work.sh` — SessionStart hook that detects active plans and prompts `/resume`
+- `scripts/wip-auto-save.sh` — safety net that stashes uncommitted work to `wip/` branches every 10 edits
+- `.lifecycle/activity.md` — rolling activity log (last 20 sessions) written by auto-checkpoint
 - `.claude-plugin/hooks/hooks.json` — automatic hook registration on plugin install
+- `/recover` Phase 0.5 — checks for WIP safety branches and offers to restore them
+- `/resume` Step 4 — shows last 3 sessions from activity log for cross-session context
 
 ### Fixed
 - Removed hardcoded Windows jq path from `track-file-change.sh` and `track-commit.sh` — now portable across platforms
 - README hook documentation now matches actual shipped scripts
 
 ### Removed
-- Personal vault scripts that don't belong in OSS repo: `read-context.sh`, `update-context.sh`, `wip-auto-save.sh`, `vault-init.sh`, `vault-init-all.sh`, `worktree-init.sh`, `gitignore-audit.sh`
+- Personal vault scripts that don't belong in OSS repo: `read-context.sh`, `update-context.sh`, `vault-init.sh`, `vault-init-all.sh`, `worktree-init.sh`, `gitignore-audit.sh`
 
 ## [2.0.0] — 2026-03-25
 
