@@ -2,10 +2,11 @@
 # PostToolUse hook: track Edit/Write file changes to append-only log
 # Trigger: matcher "Edit|Write"
 # Token cost: 0 (command hook, no LLM)
+set -euo pipefail
 
 log_error() {
-  mkdir -p "$HOME/.claude/debug" 2>/dev/null
-  echo "$(date +%Y-%m-%dT%H:%M:%S%z) [track-file-change] $1" >> "$HOME/.claude/debug/hook-failures.log"
+  mkdir -p "$HOME/.claude/debug" 2>/dev/null || true
+  echo "$(date +%Y-%m-%dT%H:%M:%S%z) [track-file-change] $1" >> "$HOME/.claude/debug/hook-failures.log" 2>/dev/null || true
 }
 
 SESSIONS_DIR="$HOME/.claude/sessions"
@@ -52,13 +53,17 @@ NOW_EPOCH=$(date +%s)
 # - Fresh log (< 15 min): append new SESSION header (same session or /compact)
 # - Stale log (>= 15 min): rename to preserve crash evidence
 if [ -f "$LOG" ]; then
-  LOG_MTIME=$(stat -c %Y "$LOG" 2>/dev/null || date -r "$LOG" +%s 2>/dev/null || echo 0)
+  # Get file mtime as epoch — try GNU stat, macOS stat, then date -r fallback
+  LOG_MTIME=$(stat -c %Y "$LOG" 2>/dev/null) \
+    || LOG_MTIME=$(stat -f %m "$LOG" 2>/dev/null) \
+    || LOG_MTIME=$(date -r "$LOG" +%s 2>/dev/null) \
+    || LOG_MTIME=0
   LOG_AGE=$(( NOW_EPOCH - LOG_MTIME ))
 
   if [ "$LOG_AGE" -ge "$STALE_THRESHOLD" ]; then
     # Stale log = crash evidence from a previous session
     OLD_SID=$(head -1 "$LOG" | sed -n 's/.*sid=\([^ ]*\).*/\1/p')
-    [ -z "$OLD_SID" ] && OLD_SID="unknown"
+    if [ -z "$OLD_SID" ]; then OLD_SID="unknown"; fi
     mv "$LOG" "$SESSIONS_DIR/active-changes-${OLD_SID}.log"
   fi
   # If fresh, just keep appending (handles /compact + concurrent sessions)
@@ -73,7 +78,7 @@ fi
 REL_PATH="${FILE_PATH#$CWD/}"
 # If stripping didn't work (path doesn't start with cwd), use as-is
 if [ "$REL_PATH" = "$FILE_PATH" ]; then
-  REL_PATH=$(realpath --relative-to="$CWD" "$FILE_PATH" 2>/dev/null || echo "$FILE_PATH")
+  REL_PATH=$(realpath --relative-to="$CWD" "$FILE_PATH" 2>/dev/null || grealpath --relative-to="$CWD" "$FILE_PATH" 2>/dev/null || echo "$FILE_PATH")
 fi
 
 # Append change line
