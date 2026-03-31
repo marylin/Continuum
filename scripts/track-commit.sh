@@ -3,6 +3,11 @@
 # Trigger: matcher "Bash(git commit*)" — runs after Linear sync + journey accumulate
 # Token cost: 0 (command hook, no LLM)
 
+log_error() {
+  mkdir -p "$HOME/.claude/debug" 2>/dev/null
+  echo "$(date +%Y-%m-%dT%H:%M:%S%z) [track-commit] $1" >> "$HOME/.claude/debug/hook-failures.log"
+}
+
 SESSIONS_DIR="$HOME/.claude/sessions"
 LOG="$SESSIONS_DIR/active-changes.log"
 
@@ -11,10 +16,10 @@ LOG="$SESSIONS_DIR/active-changes.log"
 
 # Find jq
 JQ=$(command -v jq 2>/dev/null)
-if [ -z "$JQ" ]; then
-  JQ="$HOME/AppData/Local/Microsoft/WinGet/Packages/jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe/jq.exe"
+if [ -z "$JQ" ] || [ ! -x "$JQ" ]; then
+  log_error "jq not found — install jq (https://jqlang.github.io/jq/) for session tracking"
+  exit 0
 fi
-[ ! -x "$JQ" ] && exit 0
 
 # Read stdin JSON
 INPUT=$(cat)
